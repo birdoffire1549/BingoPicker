@@ -110,16 +110,8 @@ fun StartScreen(
             modifier = modifier
                 .fillMaxSize(),
         ) {
-            Spacer(modifier = modifier.height(10.dp))
-            Button( // <---------------------------------------------------------- Reset Game Button
-                modifier = modifier
-                    .testTag("ResetGame_Button")
-                    .padding(start = 20.dp, end = 20.dp)
-                    .fillMaxWidth(),
-                onClick = { vModel.resetGame() },
-            ) {
-                Text(text = "Reset Game")
-            }
+            Spacer(modifier = modifier.height(30.dp))
+
             Row( // <-------------------------------------------------------- Current Pick container
                 modifier = modifier
                     .padding(20.dp)
@@ -175,6 +167,7 @@ fun StartScreen(
                         modifier = modifier
                             .testTag("GameOver_Text"),
                         text = "Game is Over!",
+                        fontWeight = FontWeight.Bold,
                     )
                 }
 
@@ -252,15 +245,33 @@ fun StartScreen(
                             Text(text = uiState.value.validationResultMessage)
                         }
                     }
-                    Spacer(modifier = modifier.height(40.dp)) // <--------------------------- Spacer
+                    Spacer(modifier = modifier.height(10.dp)) // <--------------------------- Spacer
                 }
+                if (uiState.value.pastPicks.isNotEmpty()) {
+                    Button( // <---------------------------------------------------------- Reset Game Button
+                        modifier = modifier
+                            .testTag("ResetGame_Button")
+                            .padding(start = 20.dp, end = 20.dp)
+                            .fillMaxWidth(),
+                        onClick = { vModel.resetGame() },
+                    ) {
+                        Text(text = "Reset Game")
+                    }
+                }
+                Spacer(modifier = modifier.height(10.dp)) // <--------------------------- Spacer
                 Row( // <-------------------------------------------------- Container for Past Picks
                     modifier = modifier
+                        .background(color = Color.Green)
                         .padding(bottom = 5.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(text = "Past Picks")
+                    Text(
+                        text = "Past Picks",
+                        color  = Color.Black,
+                        fontWeight = FontWeight.ExtraBold
+                    )
                 }
                 Divider(
                     modifier = modifier,

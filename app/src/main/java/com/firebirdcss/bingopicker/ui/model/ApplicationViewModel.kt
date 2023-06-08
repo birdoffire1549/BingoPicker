@@ -42,17 +42,20 @@ class ApplicationViewModel: ViewModel() {
                 pastPicks = pastPicks,
                 numbersToPickFrom = toPickFrom,
                 isGameOver = toPickFrom.isEmpty(),
+                validationResultMessage = "",
             )
         }
     }
 
     fun enterVerifyNumbersCsvText(text: String) {
-        _appUiState.update {
-            it.copy(
-                verifyNumbersTextField = text,
-                validationResultMessage = "",
-                isVerifyTextValid = true,
-            )
+        if (text.matches(Regex("((\\s*\\d\\d?\\s*,?)(,\\s*\\d\\d?\\s*,?)*)?"))) {
+            _appUiState.update {
+                it.copy(
+                    verifyNumbersTextField = text,
+                    validationResultMessage = "",
+                    isVerifyTextValid = true,
+                )
+            }
         }
     }
 
@@ -73,7 +76,8 @@ class ApplicationViewModel: ViewModel() {
                     it.copy(
                         isVerifyTextValid = true,
                         isNumbersValid = false,
-                        validationResultMessage = "The following were not called:\n${badNums.toString()}"
+                        verifyNumbersTextField = "",
+                        validationResultMessage = "The following were not called:\n$badNums",
                     )
                 }
             } else { // Numbers submitted were called...
@@ -82,7 +86,7 @@ class ApplicationViewModel: ViewModel() {
                         verifyNumbersTextField = "",
                         isVerifyTextValid = true,
                         isNumbersValid = true,
-                        validationResultMessage = "All numbers were called!"
+                        validationResultMessage = "All numbers were called!",
                     )
                 }
             }
