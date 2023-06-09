@@ -288,7 +288,7 @@ fun StartScreen(
                         columns = StaggeredGridCells.Fixed(4),
                         content = {
                             items(uiState.value.pastPicks) {
-                                PastPick(it)
+                                PastPick(pick = it)
                             }
                         },
                         contentPadding = PaddingValues(5.dp),
