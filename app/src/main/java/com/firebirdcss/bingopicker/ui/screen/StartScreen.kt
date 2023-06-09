@@ -2,9 +2,7 @@ package com.firebirdcss.bingopicker.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,18 +18,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -41,24 +39,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.firebirdcss.bingopicker.R
-import com.firebirdcss.bingopicker.data.blankBallImages
 import com.firebirdcss.bingopicker.ui.component.PastPick
 import com.firebirdcss.bingopicker.ui.model.ApplicationViewModel
 
+/**
+ * COMPOSABLE: This composable is the primary screen of the application, all other
+ * things displayed in this application are children of this composable.
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Preview (showBackground = true)
 @Composable
@@ -70,29 +70,30 @@ fun StartScreen(
 
     Column( // <------------------------------------------------------------------- Master Container
         modifier = modifier
+            .background(MaterialTheme.colorScheme.primaryContainer)
             .fillMaxSize(),
     ) {
         Column( // <----------------------------------------------------------------- Header Section
-
+            modifier = modifier,
         ) {
             Box(
                 modifier = modifier
                     .fillMaxWidth(),
                 contentAlignment = Alignment.TopCenter,
             ) {
-                Image(
+                Image( // <------------------------------------------------- Bingo Balls Title Image
                     painter = painterResource(id = R.drawable.bingowordballsnobgsm),
-                    contentDescription = "Bingo"
+                    contentDescription = stringResource(R.string.descr_bingo_balls_title_image)
                 )
-                Row(
+                Row( // <------------------------------------ Container for Number Picker title text
                     modifier = modifier
                         .padding(top = 40.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.Bottom,
                 ) {
-                    Text(
-                        text = "Number Picker",
+                    Text( // <--------------------------------------------- Number Picker Title Text
+                        text = stringResource(R.string.txt_number_picker_title),
                         fontSize = 20.sp,
                         fontStyle = FontStyle.Italic,
                         fontWeight = FontWeight.ExtraBold,
@@ -110,8 +111,7 @@ fun StartScreen(
             modifier = modifier
                 .fillMaxSize(),
         ) {
-            Spacer(modifier = modifier.height(30.dp))
-
+            Spacer(modifier = modifier.height(30.dp)) // <------------------------ Post title spacer
             Row( // <-------------------------------------------------------- Current Pick container
                 modifier = modifier
                     .padding(20.dp)
@@ -121,39 +121,37 @@ fun StartScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(
+                Box( // <------------------ Container for Bingo Cards Image Button and Picked Number
                     modifier = modifier
-                        .clickable {
-                           if (!uiState.value.isGameOver) {
+                        .clickable { // Only clickable if game is NOT over.
+                           if (!uiState.value.isGameOver) { // Game Not Over...
                                vModel.pickANumber()
                            }
                         },
                     contentAlignment = Alignment.Center,
                 ) {
-                    Image(
+                    Image( // <--------------------------------- Bingo Cards Image and Picker Button
                         modifier = modifier,
                         painter = painterResource(id = R.drawable.greencardsredmarkersnobg),
-                        contentDescription = "",
+                        contentDescription = stringResource(R.string.descr_bingo_cards_image),
                         alpha = .3f
                     )
-                    if (uiState.value.currentPick != null) {
-                        Text(
-                            // <-------------------------------------------------------- Current Pick Text
+                    if (uiState.value.currentPick != null) { // A current pick exists...
+                        Text( // <---------------------------------------- Current Pick display Text
                             text = "${uiState.value.currentPick?.row?.name}-${uiState.value.currentPick?.value}",
                             modifier = modifier
                                 .testTag("CurrentPick_Text"),
                             fontSize = 100.sp,
                         )
-                    } else {
+                    } else { // No pick currently...s
                         Text(
-                            text = "Click to Pick!",
+                            text = stringResource(R.string.txt_click_to_pick),
                             fontSize = 50.sp,
                         )
                     }
                 }
-
             }
-            if (uiState.value.isGameOver) {
+            if (uiState.value.isGameOver) { // Game is over...
                 Row( // <-------------------------------------------------- Game Over Text Container
                     modifier = modifier
                         .padding(start = 20.dp, bottom = 10.dp, end = 20.dp)
@@ -163,20 +161,19 @@ fun StartScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
+                    Text( // <------------------------------------------------------- Game Over Text
                         modifier = modifier
                             .testTag("GameOver_Text"),
-                        text = "Game is Over!",
+                        text = stringResource(R.string.txt_game_is_over),
                         fontWeight = FontWeight.Bold,
                     )
                 }
-
             }
             Column( // <------------------------ Container for everything below Pick a Number Button
                 modifier = modifier
                     .fillMaxSize(),
             ) {
-                if (!uiState.value.isGameOver) {
+                if (!uiState.value.isGameOver) { // <------------------------------ Game is Not Over
                     Row( // <------------ Container for Row of Verify a called number Box and Button
                         modifier = modifier
                             .fillMaxWidth(),
@@ -186,9 +183,9 @@ fun StartScreen(
                             enabled = !uiState.value.isGameOver,
                             label = {
                                 if (uiState.value.isVerifyTextValid) {
-                                    Text(text = "Verify called numbers (CSV)")
+                                    Text(text = stringResource(R.string.txt_verify_numbers_csv))
                                 } else {
-                                    Text(text = "Entry is invalid!")
+                                    Text(text = stringResource(R.string.txt_entry_is_invalid))
                                 }
                             },
                             modifier = modifier
@@ -204,86 +201,90 @@ fun StartScreen(
                                 onDone = { vModel.doVerifyCalledNumbers() },
                             )
                         )
-                        OutlinedIconButton(
-                            // <---------------------------------------- Done IconButton
+                        OutlinedIconButton( // <------------------------------------ Done IconButton
                             enabled = !uiState.value.isGameOver,
                             onClick = { vModel.doVerifyCalledNumbers() },
                             modifier = modifier,
                         ) {
-                            Icon(
+                            Icon( // <---------------------------------------------------- Done Icon
                                 imageVector = Icons.Filled.Done,
                                 contentDescription = "Done Button"
                             )
                         }
                     }
-
-                    if (uiState.value.validationResultMessage.isNotBlank()) {
-                        Row(
+                    if (uiState.value.validationResultMessage.isNotBlank()) { // There is a validation result...
+                        Row( // <----------------------------------- Container for validation result
                             modifier = modifier
                                 .padding(20.dp)
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start,
                         ) {
-                            if (uiState.value.isNumbersValid) {
-                                Icon(
+                            if (uiState.value.isNumbersValid) { // Numbers are valid...
+                                Icon( // <----------------------------------------------- Valid Icon
                                     modifier = modifier
                                         .testTag("Valid_Icon"),
                                     imageVector = Icons.Filled.CheckCircle,
-                                    contentDescription = "Valid Icon",
+                                    contentDescription = stringResource(R.string.descr_valid_icon),
                                     tint = Color.Green,
                                 )
-                            } else {
-                                Icon(
+                            } else { // Number(s) not valid...
+                                Icon( // <--------------------------------------------- InValid Icon
                                     modifier = modifier
                                         .testTag("Invalid_Icon"),
                                     imageVector = Icons.Filled.Warning,
-                                    contentDescription = "Invalid Icon",
+                                    contentDescription = stringResource(R.string.descr_invalid_icon),
                                     tint = Color.Red,
                                 )
                             }
-                            Spacer(modifier = modifier.width(10.dp))
+                            Spacer(modifier = modifier.width(10.dp)) // <---------- Post Icon Spacer
                             Text(text = uiState.value.validationResultMessage)
                         }
                     }
-                    Spacer(modifier = modifier.height(10.dp)) // <--------------------------- Spacer
+                    Spacer(modifier = modifier.height(10.dp)) // <--- Post Validation section Spacer
                 }
-                if (uiState.value.pastPicks.isNotEmpty()) {
-                    Button( // <---------------------------------------------------------- Reset Game Button
+                if (uiState.value.pastPicks.isNotEmpty()) { // Number(s) have been picked...
+                    Button( // <-------------------------------------------------- Reset Game Button
                         modifier = modifier
                             .testTag("ResetGame_Button")
                             .padding(start = 20.dp, end = 20.dp)
                             .fillMaxWidth(),
                         onClick = { vModel.resetGame() },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.onPrimary,
+                            contentColor = MaterialTheme.colorScheme.tertiary,
+                        ),
                     ) {
-                        Text(text = "Reset Game")
+                        Text(text = stringResource(R.string.txt_reset_game))
                     }
                 }
-                Spacer(modifier = modifier.height(10.dp)) // <--------------------------- Spacer
-                Row( // <-------------------------------------------------- Container for Past Picks
+                Spacer(modifier = modifier.height(10.dp)) // <------------- Post Reset Button Spacer
+                Row(
+                    // <-------------------------------------------------- Container for Past Picks
                     modifier = modifier
-                        .background(color = Color.Green)
+                        .background(color = MaterialTheme.colorScheme.secondary)
                         .padding(bottom = 5.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = "Past Picks",
+                    Text( // <------------------------------------------------------ Past Picks Text
+                        text = stringResource(R.string.txt_past_picks),
                         color  = Color.Black,
                         fontWeight = FontWeight.ExtraBold
                     )
                 }
-                Divider(
+                Divider( // <----------------------------------------------- Post Past Picks Divider
                     modifier = modifier,
                     thickness = 5.dp,
                 )
                 Column( // <----------------------------------------------- Container for Past Picks
                     modifier = modifier
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
                         .padding(start = 20.dp, end = 20.dp)
-                        .fillMaxWidth(),
+                        .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    LazyVerticalStaggeredGrid(
+                    LazyVerticalStaggeredGrid( // <-------------------------- Past Pick Results Grid
                         columns = StaggeredGridCells.Fixed(4),
                         content = {
                             items(uiState.value.pastPicks) {

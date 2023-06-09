@@ -6,13 +6,19 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.firebirdcss.bingopicker.ui.screen.StartScreen
 import com.firebirdcss.bingopicker.ui.theme.AppTheme
 
+/**
+ * MAIN_ACTIVITY: This is the main activity of the app.
+ * This is where the app begins its execution.
+ */
 class MainActivity : ComponentActivity() {
+    /**
+     * OVERRIDE: This function is an override of the one
+     * provided by the extending of the ComponentActivity class.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -26,13 +32,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun GreetingPreview() {
-    AppTheme {
-        StartScreen()
     }
 }

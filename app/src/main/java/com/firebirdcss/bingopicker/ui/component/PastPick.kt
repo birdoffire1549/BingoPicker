@@ -9,13 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,51 +24,58 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.firebirdcss.bingopicker.R
-import com.firebirdcss.bingopicker.data.blankBallImages
 import com.firebirdcss.bingopicker.data.poko.Pick
-import com.firebirdcss.bingopicker.data.poko.PickBall
 
+/**
+ * COMPOSABLE: This composable is a reusable component which
+ * is used to display a picked Bingo Ball.
+ */
 @Preview
 @Composable
 fun PastPick(
-    pick: Pick = Pick(),
     modifier: Modifier = Modifier,
+    pick: Pick = Pick(),
 ) {
-    Card(
+    OutlinedCard( // <----------------------------------------------------------- The Card Container
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
         modifier = modifier
             .padding(10.dp)
             .height(60.dp)
             .width(100.dp),
     ) {
-        Row(
+        Row( // <------------------------------------ Primary container for the contents of the card
             modifier = modifier
                 .fillMaxSize(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Column(
+            Column( // <------------------------------------------ Container for the Sequence Number
                 modifier = modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(
+                Text( // <------------------------------------------ The text of the sequence number
                     text = "#${pick.sequence}",
-                    fontSize = if (pick.sequence > 9) {
+                    fontSize = if (pick.sequence > 9) { // Pick is double digit...
                         10.sp
-                    } else {
+                    } else { // Pick is single digit...
                         15.sp
                     }
                 )
             }
-            Column(
+            Column( // <---------------------------------- Container for the Image of the Bingo Ball
                 modifier = modifier.weight(2f),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Box(
+                Box( // <------------------------------ Container to allow for text overlay of image
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(painter = painterResource(id = pick.ball.ballImage), contentDescription = null)
-                    Text(
+                    Image( // <---------------------------------------------------- Bingo Ball Image
+                        painter = painterResource(id = pick.ball.ballImage),
+                        contentDescription = null
+                    )
+                    Text( // <---------------------------------------------- Text for the Bingo Ball
                         text = "${pick.row.name}-${pick.value}",
                         color = Color.Black,
                         fontSize = 10.sp,
